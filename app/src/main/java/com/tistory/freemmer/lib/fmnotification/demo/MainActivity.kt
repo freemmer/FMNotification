@@ -1,7 +1,9 @@
 package com.tistory.freemmer.lib.fmnotification.demo
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.graphics.Color
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +12,7 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
+import com.tistory.freemmer.lib.fmnotification.FMNotification
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,16 +21,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            val channelId = getString(R.string.default_notification_channel_id)
-            val channelName = getString(R.string.default_notification_channel_name)
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager?.createNotificationChannel(
-                NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW)
-            )
-        }
+
+        val yy = applicationContext.applicationInfo
+        // packageManager.getApplicationLabel(applicationInfo)
+        val a1 = applicationContext.packageManager.getApplicationLabel(yy)
+        val a3 =applicationContext.applicationInfo.loadLabel(applicationContext.packageManager)
+        // getApplicationInfo().loadLabel(getPackageManager()).toString();
+
+        // In case automatically create default channel
+        FMNotification.initialize(this)
+        // In case manually create default channel
+        //FMNotification.instance(this).createChannel("default_channel_id", "Default Channel")
 
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher

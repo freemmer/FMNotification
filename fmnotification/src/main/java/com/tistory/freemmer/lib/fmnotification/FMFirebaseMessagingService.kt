@@ -62,7 +62,7 @@ class FMFirebaseMessagingService : FirebaseMessagingService() {
         remoteMessage?.notification?.let {
             // EX) Message Notification Body:  알림 텍스트
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            FMNotification.instance(this).sendNotification(it.body ?: "Empty body")
+            FMNotification.instance(this).sendNotification(it.title, it.body)
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
