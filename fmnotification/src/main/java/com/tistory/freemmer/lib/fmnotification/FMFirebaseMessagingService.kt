@@ -26,44 +26,29 @@ class FMFirebaseMessagingService : FirebaseMessagingService() {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: ${remoteMessage?.from}")
+        // Check if message contains a notification payload.
+        remoteMessage?.notification?.let {
+            Log.d(TAG, "Message Notification Body: ${it.body}")
+            FMNotification.instance(this).sendNotification((0..1000000).random(), it.title, it.body
+                , remoteMessage.toIntent()?.extras)
+            return
+        }
 
         // Check if message contains a data payload.
         remoteMessage?.data?.isNotEmpty()?.let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
-            FMJobService.scheduleJob(this, "FCM")
+            var title = "Undefined Title"
+            var body = "Undefined Body"
+            FMNotification.PAYLOAD_TITLE_KEY?.let { key ->
+                title = remoteMessage.data[key] ?: "Empty Title"
+            }
+            FMNotification.PAYLOAD_BODY_KEY?.let { key ->
+                body = remoteMessage.data[key] ?: "Empty Title"
+            }
+            FMNotification.instance(this).sendNotification((0..1000000).random(), title, body
+                , remoteMessage.toIntent()?.extras)
+            //FMJobService.scheduleJob(this, "FCM")
         }
-
-        //(FE): session_start(_s)
-        //      , Bundle[{ firebase_event_origin(_o)=auto
-        //                  , firebase_screen_class(_sc)=MainActivity
-        //                  , firebase_screen_id(_si)=1460929196528696177 }]
-        //(FE): notification_receive(_nr)
-        //      , Bundle[{ firebase_event_origin(_o)=fcm
-        //                  , firebase_screen_class(_sc)=MainActivity
-        //                  , firebase_screen_id(_si)=1460929196528696177
-        //                  , message_device_time(_ndt)=0, message_name(_nmn)=알림 라벨
-        //                  , message_time(_nmt)=1548311863
-        //                  , message_id(_nmid)=4903927122438645137 }]
-        //(FE): notification_foreground(_nf)
-        //      , Bundle[{ firebase_event_origin(_o)=fcm
-        //                  , firebase_screen_class(_sc)=MainActivity
-        //                  , firebase_screen_id(_si)=1460929196528696177
-        //                  , message_device_time(_ndt)=0
-        //                  , message_name(_nmn)=알림 라벨
-        //                  , message_time(_nmt)=1548311863
-        //                  , message_id(_nmid)=4903927122438645137 }]
-
-        // Check if message contains a notification payload.
-        remoteMessage?.notification?.let {
-            Log.d(TAG, "Message Notification Body: ${it.body}")
-            FMNotification.instance(this).sendNotification((0..1000000).random(), it.title, it.body)
-        }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 
 
