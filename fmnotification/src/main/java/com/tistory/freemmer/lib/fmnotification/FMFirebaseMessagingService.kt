@@ -28,12 +28,10 @@ class FMFirebaseMessagingService : FirebaseMessagingService() {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        // EX) From: 793976323963
         Log.d(TAG, "From: ${remoteMessage?.from}")
 
         // Check if message contains a data payload.
         remoteMessage?.data?.isNotEmpty()?.let {
-            // EX) Message data payload: {}
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
             FMJobService.scheduleJob(this, "FCM")
         }
@@ -60,9 +58,8 @@ class FMFirebaseMessagingService : FirebaseMessagingService() {
 
         // Check if message contains a notification payload.
         remoteMessage?.notification?.let {
-            // EX) Message Notification Body:  알림 텍스트
             Log.d(TAG, "Message Notification Body: ${it.body}")
-            FMNotification.instance(this).sendNotification(it.title, it.body)
+            FMNotification.instance(this).sendNotification((0..1000000).random(), it.title, it.body)
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

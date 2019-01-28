@@ -1,6 +1,10 @@
 package com.tistory.freemmer.lib.fmnotification.util
 
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.os.Bundle
 import java.lang.ref.WeakReference
 
 /**
@@ -20,6 +24,32 @@ class FMDeviceUtil private constructor(
             }
             return weakReference?.get()!!
         }
+    }
+
+
+    fun getPackageName(): String {
+        return context.applicationContext.packageName
+    }
+
+    fun getApplicationInfo(): ApplicationInfo {
+        return context.applicationContext.applicationInfo
+    }
+
+    fun getAppLabel() : String {
+        return getApplicationInfo().loadLabel(context.applicationContext.packageManager).toString()
+    }
+
+    fun getMetaData(): Bundle {
+        return context.applicationContext.packageManager
+            .getApplicationInfo(getPackageName() , PackageManager.GET_META_DATA).metaData
+    }
+
+    fun getLaunchIntent(): Intent {
+        return context.packageManager.getLaunchIntentForPackage(getPackageName()) as Intent
+    }
+
+    fun getResourceID(variableName:String, resourceType: String): Int {
+        return context.resources.getIdentifier(variableName, resourceType, getPackageName())
     }
 
 

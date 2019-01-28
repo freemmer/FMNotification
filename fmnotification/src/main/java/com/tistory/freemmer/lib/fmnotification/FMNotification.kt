@@ -6,10 +6,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import com.tistory.freemmer.lib.fmnotification.util.FMDeviceUtil
 import java.lang.ref.WeakReference
 
 /**
@@ -58,65 +58,47 @@ class FMNotification private constructor(
         return this
     }
 
-    fun sendNotification(title: String?, body: String?, channelId: String = context.getString(R.string.default_notification_channel_id)) {
-        val packageName = context.applicationContext.packageName
-        val ai = context.applicationContext.packageManager.getApplicationInfo(packageName
-            , PackageManager.GET_META_DATA)
-
-        val intent: Intent
-        intent = if (TARGET_LAUNCH_CLASS != null) {
+    fun sendNotification(notiId: Int, title: String?, body: String?, channelId: String = context.getString(R.string.default_notification_channel_id)) {
+        val intent: Intent = if (TARGET_LAUNCH_CLASS != null) {
             Intent(context, TARGET_LAUNCH_CLASS)
         } else {
-            context.packageManager.getLaunchIntentForPackage(packageName) as Intent
+            FMDeviceUtil.instance(context).getLaunchIntent()
         }
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(context, 0 /* Request code */, intent,
             PendingIntent.FLAG_ONE_SHOT)
-        //val channelId = context.getString(R.string.default_notification_channel_id)
-        //val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
         val smallIcon: Int
         if (SMALL_ICON < 0) {
             // pushIcon meta 정보 있는지 확인
-
-            val aBundle = ai.metaData
+            val aBundle = FMDeviceUtil.instance(context).getMetaData()
             if (aBundle.get("pushIcon") != null) {
                 val split =
                     (aBundle.get("pushIcon") as String).split("/".toRegex()).dropLastWhile { it.isEmpty() }
                         .toTypedArray()
                 var name = split[split.size - 1]
                 name = name.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
-                smallIcon = context.resources.getIdentifier(name, "drawable", packageName)
+                smallIcon = FMDeviceUtil.instance(context).getResourceID(name, "drawable")
             } else {
                 // 없으면 AppIcon 정보 가져옴
-                smallIcon = ai.icon
+                smallIcon = FMDeviceUtil.instance(context).getApplicationInfo().icon
             }
         } else {
             smallIcon =SMALL_ICON
         }
-        val xx = title ?: ai.name
-        val yy = context.applicationContext.applicationInfo
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(smallIcon)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(Notification.DEFAULT_ALL)
             .setContentIntent(pendingIntent)
-            .setContentTitle(title.takeIf { title != null } ?: ai.name)
-
-        //if (title != null) notificationBuilder.setContentTitle(title)
+            .setContentTitle(title.takeIf { title != null } ?: FMDeviceUtil.instance(context).getAppLabel())
         if (body != null) notificationBuilder.setContentText(body)
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-//        // Since android Oreo notification channel is needed.
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(channelId,
-//                "Channel human readable title",
-//                NotificationManager.IMPORTANCE_DEFAULT)
-//            notificationManager.createNotificationChannel(channel)
-//        }
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(notiId, notificationBuilder.build())
     }
+
 }
+
