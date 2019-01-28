@@ -2,8 +2,8 @@
 [![](https://jitpack.io/v/freemmer/FMNotification.svg)](https://jitpack.io/#freemmer/FMNotification)
 
 # FMNotification
-For FCM Receive and Notification on Android (Kotlin)
-This project is based on 'https://github.com/firebase/quickstart-android/tree/master/messaging'
+For FCM Receive and Notification on Android. (Kotlin)
++ This project is based on 'https://github.com/firebase/quickstart-android/tree/master/messaging'
 
 ## Demo ScreenShot
 ![Screenshot](https://github.com/freemmer/FMNotification/blob/master/Screenshots/screenshots.gif)
