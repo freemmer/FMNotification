@@ -26,7 +26,7 @@ dependencies {
 ```
 
 ## How To Use
-+ By default, Must be FCM ready for use. (Register your app to use FCM with Firebase and apply google-services.json)
++ ★ By default, Must be FCM ready for use. (Register your app to use FCM with Firebase and apply google-services.json)
 
 + Application Class
 ```Kotlin
