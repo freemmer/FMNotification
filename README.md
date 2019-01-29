@@ -21,7 +21,7 @@ allprojects {
 App build.gradle
 ```Groovy
 dependencies {
-    implementation 'com.github.freemmer:FMNotification:1.0.0'
+    implementation 'com.github.freemmer:FMNotification:1.0.1'
 }
 ```
 
