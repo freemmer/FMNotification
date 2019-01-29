@@ -42,7 +42,7 @@ class FMNotification private constructor(
             return weakReference?.get()!!
         }
 
-        fun getPushToken(pFunc:(isSuccessful: Boolean, token: String?) -> Any) {
+        fun getPushToken(pFunc:(isSuccessful: Boolean, token: String?) -> Unit) {
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener { task ->
                     pFunc(task.isSuccessful, task.result?.token)
