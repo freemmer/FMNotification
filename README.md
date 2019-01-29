@@ -9,6 +9,9 @@ For FCM Receive and Notification on Android. (Kotlin)
 ![Screenshot](https://github.com/freemmer/FMNotification/blob/master/Screenshots/screenshots.gif)
 
 ## Setup
+★ By default, Must be FCM ready for use. (Register your app to use FCM with Firebase and apply google-services.json)
+
+
 Project build.gradle
 ```Groovy
 allprojects {
@@ -26,8 +29,6 @@ dependencies {
 ```
 
 ## How To Use
-+ ★ By default, Must be FCM ready for use. (Register your app to use FCM with Firebase and apply google-services.json)
-
 + Application Class
 ```Kotlin
 class MainApplication : Application() {
